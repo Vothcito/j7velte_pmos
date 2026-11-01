@@ -1,0 +1,7 @@
+#!/bin/sh
+# Close S2MU005 MUIC D+/D- switches to USB (MANSW_USB = 0x24)
+for d in /sys/class/i2c-dev/i2c-*; do
+    case "$(readlink -f "$d/device")" in
+        *13870000.i2c*) i2cset -y "${d##*i2c-}" 0x3d 0xb5 0x24 ;;
+    esac
+done

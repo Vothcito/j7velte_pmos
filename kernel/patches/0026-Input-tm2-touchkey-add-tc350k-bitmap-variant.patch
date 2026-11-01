@@ -1,0 +1,57 @@
+--- a/drivers/input/keyboard/tm2-touchkey.c	2026-10-26 22:21:12.417025298 -0500
++++ b/drivers/input/keyboard/tm2-touchkey.c	2026-10-26 22:21:14.385078028 -0500
+@@ -40,6 +40,7 @@
+ 	u8 cmd_led_off;
+ 	bool no_reg;
+ 	bool fixed_regulator;
++	bool bitmap;
+ };
+ 
+ struct tm2_touchkey_data {
+@@ -82,6 +83,15 @@
+ 	.cmd_led_off = TM2_TOUCHKEY_CMD_LED_OFF,
+ };
+ 
++static const struct touchkey_variant tc350k_touchkey_variant = {
++	.keycode_reg = 0x00,
++	.base_reg = 0x00,
++	.fixed_regulator = true,
++	.bitmap = true,
++	.cmd_led_on = TM2_TOUCHKEY_CMD_LED_ON,
++	.cmd_led_off = TM2_TOUCHKEY_CMD_LED_OFF,
++};
++
+ static int tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
+ 					    enum led_brightness brightness)
+ {
+@@ -148,6 +158,20 @@
+ 		goto out;
+ 	}
+ 
++	if (touchkey->variant->bitmap) {
++		/* bits 0-1: keys pressed, bits 4-5: keys released */
++		for (i = 0; i < touchkey->num_keycodes && i < 2; i++) {
++			if (data & BIT(i))
++				input_report_key(touchkey->input_dev,
++						 touchkey->keycodes[i], 1);
++			if (data & BIT(i + 4))
++				input_report_key(touchkey->input_dev,
++						 touchkey->keycodes[i], 0);
++		}
++		input_sync(touchkey->input_dev);
++		goto out;
++	}
++
+ 	index = (data & TM2_TOUCHKEY_BIT_KEYCODE) - 1;
+ 	if (index < 0 || index >= touchkey->num_keycodes) {
+ 		dev_warn(&touchkey->client->dev,
+@@ -344,6 +368,9 @@
+ 	}, {
+ 		.compatible = "coreriver,tc360-touchkey",
+ 		.data = &tc360_touchkey_variant,
++	}, {
++		.compatible = "coreriver,tc350k-touchkey",
++		.data = &tc350k_touchkey_variant,
+ 	},
+ 	{ },
+ };

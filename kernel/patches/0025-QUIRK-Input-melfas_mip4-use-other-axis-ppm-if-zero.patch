@@ -1,0 +1,18 @@
+--- a/drivers/input/touchscreen/melfas_mip4.c	2026-10-26 16:04:37.319053835 -0500
++++ b/drivers/input/touchscreen/melfas_mip4.c	2026-10-26 16:04:39.343993199 -0500
+@@ -333,6 +333,15 @@
+ 
+ 		ts->ppm_x = buf[12];
+ 		ts->ppm_y = buf[13];
++
++		/*
++		 * Some chips report the pixel density of one axis only, which
++		 * makes libinput reject the device. Use the other axis then.
++		 */
++		if (!ts->ppm_x)
++			ts->ppm_x = ts->ppm_y;
++		if (!ts->ppm_y)
++			ts->ppm_y = ts->ppm_x;
+ 		dev_dbg(&ts->client->dev, "ppm_x: %d, ppm_y: %d\n",
+ 			ts->ppm_x, ts->ppm_y);
+ 

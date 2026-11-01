@@ -1,0 +1,48 @@
+diff --git a/device/testing/linux-postmarketos-exynos7870/APKBUILD b/device/testing/linux-postmarketos-exynos7870/APKBUILD
+index f21bab2285..27dd9ecf3d 100644
+--- a/device/testing/linux-postmarketos-exynos7870/APKBUILD
++++ b/device/testing/linux-postmarketos-exynos7870/APKBUILD
+@@ -36,7 +36,7 @@ _kmajver="$(echo "$pkgver" | sed 's/\..*$//')"
+ # Source
+ source="
+ 	linux-$pkgver.tar.gz::https://cdn.kernel.org/pub/linux/kernel/v$_kmajver.x/linux-$pkgver.tar.gz
+-	patches-$_commit.tar.gz::https://gitlab.com/$_owner/$_repo/-/archive/$_commit/$_repo-$_commit.tar.gz
++	patches-j7velte.tar.gz
+ 	$_config
+ "
+ builddir="$srcdir/linux-$pkgver"
+@@ -94,6 +94,6 @@ package() {
+ 
+ sha512sums="
+ a12a16c08c8867397c69c8eeb5a1a9195253cbcce8d0a9cc731c24d027d79040a9d2b598bcc2c6fca0f4a1f019216e652d2fc1a00025b15c064b7165a61ee9c3  linux-6.15.tar.gz
+-6ae251c24451851480a44f754cc1c7d07aef698c177b850c5f45f7018c767803c4609add27e5d9a747140e692180ad76f057e471cf0d3038e05050e40d8ea6db  patches-5686e3b545bd34e80ec6e73604b8819d10e52a2c.tar.gz
+-8601e1eb16aa0e3f9ddc52f8ef719c3c882759c80fc391aafa0ca900247368f21e3d0244f44922bab7fafbf705811cf4c91877c098af562685dbb054322377ba  config-postmarketos-exynos7870.aarch64
++1424f5e31cc4c66a38116c99f31a0eff5ed472729d7f19fc79913d35d76004e57b2787354d9a859f085880280093e018bd7e4034feb1bf226cc03a6598a9bf87  patches-j7velte.tar.gz
++dc39bf553347f6726b5566e772c3709a628f13c4f7f08df1db84a1db243a704d4e813e7a2fee5fbeafa49dc862fe02d858dd422a79c2b917fa376958446507a6  config-postmarketos-exynos7870.aarch64
+ "
+diff --git a/device/testing/linux-postmarketos-exynos7870/config-postmarketos-exynos7870.aarch64 b/device/testing/linux-postmarketos-exynos7870/config-postmarketos-exynos7870.aarch64
+index 75f3731c07..f3cf7cd865 100644
+--- a/device/testing/linux-postmarketos-exynos7870/config-postmarketos-exynos7870.aarch64
++++ b/device/testing/linux-postmarketos-exynos7870/config-postmarketos-exynos7870.aarch64
+@@ -2244,7 +2244,7 @@ CONFIG_KEYBOARD_IMX_BBM_SCMI=y
+ # CONFIG_KEYBOARD_STOWAWAY is not set
+ # CONFIG_KEYBOARD_SUNKBD is not set
+ # CONFIG_KEYBOARD_OMAP4 is not set
+-# CONFIG_KEYBOARD_TM2_TOUCHKEY is not set
++CONFIG_KEYBOARD_TM2_TOUCHKEY=y
+ # CONFIG_KEYBOARD_XTKBD is not set
+ # CONFIG_KEYBOARD_CAP11XX is not set
+ # CONFIG_KEYBOARD_BCM is not set
+@@ -2478,7 +2478,6 @@ CONFIG_DEVPORT=y
+ #
+ CONFIG_I2C=y
+ CONFIG_I2C_BOARDINFO=y
+-# CONFIG_I2C_CHARDEV is not set
+ # CONFIG_I2C_MUX is not set
+ CONFIG_I2C_HELPER_AUTO=y
+ CONFIG_I2C_ALGOBIT=y
+@@ -6001,3 +6000,4 @@ CONFIG_MEMTEST=y
+ # end of Kernel hacking
+ 
+ CONFIG_IO_URING_ZCRX=y
++CONFIG_I2C_CHARDEV=y
